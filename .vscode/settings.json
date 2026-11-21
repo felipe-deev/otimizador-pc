@@ -1,0 +1,22 @@
+{
+  // O VS Code (Electron) trava qualquer .asar que abre; esconder as pastas de build evita que o build seguinte falhe
+  "files.exclude": {
+    "dist": true,
+    "release": true,
+    "instalador": true,
+    "programa": true
+  },
+  "files.watcherExclude": {
+    "**/dist/**": true,
+    "**/release/**": true,
+    "**/instalador/**": true,
+    "**/programa/**": true
+  },
+  "search.exclude": {
+    "dist": true,
+    "release": true,
+    "instalador": true,
+    "programa": true
+  }
+}
+

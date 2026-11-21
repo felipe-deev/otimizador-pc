@@ -1,0 +1,12 @@
+# Dependências (recriadas com npm install)
+node_modules/
+
+# Saídas de build (recriadas com npm run build)
+programa/
+dist/
+release/
+instalador/
+
+# Logs
+*.log
+npm-debug.log*

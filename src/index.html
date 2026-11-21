@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>VOLT PC Otimizador</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ícones (SVG inline, sem dependências) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7M5 10v10h5v-6h4v6h5V10"/></symbol>
+    <symbol id="i-velocimetro" viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-6"/></symbol>
+    <symbol id="i-vassoura" viewBox="0 0 24 24"><path d="M14 3l-3 8M7 12h10l-1 9H6l1-9zM10 16v5M14 16v5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8M7 6a8 8 0 1 0 10 0"/></symbol>
+    <symbol id="i-apps" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol>
+    <symbol id="i-ferramenta" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L21 13l-8 8-2-2 8-8M3 21l6-6M9.3 6.3 6 3 3 6l3.3 3.3"/></symbol>
+    <symbol id="i-grafico" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+    <symbol id="i-ram" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="1"/><path d="M6 17v3M10 17v3M14 17v3M18 17v3M6 10v4M10 10v4M14 10v4M18 10v4"/></symbol>
+    <symbol id="i-gpu" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="15" cy="12" r="3"/><path d="M6 10h3M6 14h3"/></symbol>
+    <symbol id="i-disco" viewBox="0 0 24 24"><path d="M3 13h18v6H3zM5 13l2-8h10l2 8M17 16h.01"/></symbol>
+    <symbol id="i-pulso" viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></symbol>
+    <symbol id="i-alvo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+    <symbol id="i-lixo" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-seta" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-jogo" viewBox="0 0 24 24"><path d="M6 9h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.5 1.7L15 14H9l-1.5 1.7A3 3 0 0 1 2 14v-1a4 4 0 0 1 4-4zM7 11v3M5.5 12.5h3M16 12h.01M18 13h.01"/></symbol>
+    <symbol id="i-chave" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/></symbol>
+    <symbol id="i-voltar" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"/></symbol>
+  </svg>
+
+  <aside>
+    <div class="logo">
+      <svg class="logo-raio"><use href="#i-raio"/></svg>
+      <div><b>VOLT <em>PC</em></b><small>OTIMIZADOR</small></div>
+    </div>
+    <nav>
+      <button class="tab ativo" data-tab="inicio" title="Início"><svg><use href="#i-casa"/></svg><span>Início</span></button>
+      <button class="tab" data-tab="desempenho" title="Desempenho"><svg><use href="#i-velocimetro"/></svg><span>Desempenho</span></button>
+      <button class="tab" data-tab="limpeza" title="Limpeza"><svg><use href="#i-vassoura"/></svg><span>Limpeza</span><em id="badgeLixo"></em></button>
+      <button class="tab" data-tab="startup" title="Inicialização"><svg><use href="#i-power"/></svg><span>Inicialização</span><em id="badgeStartup"></em></button>
+      <button class="tab" data-tab="apps" title="Aplicativos"><svg><use href="#i-apps"/></svg><span>Aplicativos</span><em id="badgeApps"></em></button>
+      <button class="tab" data-tab="ferramentas" title="Ferramentas"><svg><use href="#i-ferramenta"/></svg><span>Ferramentas</span><em id="badgeJogo" class="verde"></em></button>
+      <button class="tab" data-tab="relatorios" title="Relatórios"><svg><use href="#i-grafico"/></svg><span>Relatórios</span></button>
+    </nav>
+    <div class="mini-monitor">
+      <div><span>CPU</span><b id="miniCpu">—</b></div>
+      <div><span>RAM</span><b id="miniRam">—</b></div>
+      <div><span>GPU</span><b id="miniGpu">—</b></div>
+    </div>
+  </aside>
+
+  <div class="principal">
+    <div class="topo">
+      <div class="trilha">VOLT PC <svg><use href="#i-seta"/></svg> <b id="trilhaPagina">Início</b></div>
+      <div class="chips-topo">
+        <button id="chipAdmin" class="chip escondido" title="Algumas funções precisam de Administrador"></button>
+        <button id="chipDefender" class="chip escondido"></button>
+      </div>
+    </div>
+
+    <main>
+      <!-- INÍCIO -->
+      <section id="inicio" class="pagina ativa">
+        <header class="cabecalho">
+          <div>
+            <h1>Desempenho <span class="destaque">sob controle</span></h1>
+            <p class="sub">Tudo o que acontece no seu PC, em tempo real.</p>
+          </div>
+          <button id="btnAnalise" class="primario grande"><svg><use href="#i-busca"/></svg>Executar análise</button>
+        </header>
+
+        <div class="card hero">
+          <div class="anel">
+            <svg viewBox="0 0 120 120"><defs><linearGradient id="gradAnel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs>
+              <circle cx="60" cy="60" r="52" class="anel-fundo"/><circle cx="60" cy="60" r="52" id="anelNota" class="anel-valor"/></svg>
+            <div class="anel-txt"><strong id="nota">—</strong><span>/100</span><small>Índice de saúde</small></div>
+          </div>
+          <div class="hero-txt">
+            <div class="hero-titulo"><svg id="heroIcone" class="icone-escudo"><use href="#i-escudo"/></svg><h2 id="notaTexto">Analisando seu PC...</h2></div>
+            <p id="notaSub" class="sub">Lendo memória, discos, aplicativos, inicialização e arquivos temporários.</p>
+            <ul id="notaDicas"></ul>
+            <button id="btnDetalhes" class="contorno">Ver detalhes <svg><use href="#i-seta"/></svg></button>
+          </div>
+        </div>
+
+        <div class="metricas">
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-cpu"/></svg>Processador</div>
+            <div class="metrica-linha"><strong id="mCpu">—</strong><canvas id="sparkCpu"></canvas></div><span class="dica" id="mCpuSub">—</span></div>
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-ram"/></svg>Memória</div>
+            <div class="metrica-linha"><strong id="mRam">—</strong><canvas id="sparkRam"></canvas></div><span class="dica" id="mRamSub">—</span></div>
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-gpu"/></svg>Placa de vídeo</div>
+            <div class="metrica-linha"><strong id="mGpu">—</strong><canvas id="sparkGpu"></canvas></div><span class="dica" id="mGpuSub">Aguardando leitura...</span></div>
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-disco"/></svg>Armazenamento <small id="mDiscoNome"></small></div>
+            <div class="metrica-linha"><strong id="mDisco">—</strong><div class="barra"><i id="mDiscoBarra"></i></div></div><span class="dica" id="mDiscoSub">—</span></div>
+        </div>
+
+        <div class="linha-dupla">
+          <div class="card">
+            <div class="linha-titulo"><h3><svg><use href="#i-pulso"/></svg>Monitoramento ao vivo</h3>
+              <select id="janelaGrafico"><option value="60">60 segundos</option><option value="120">2 minutos</option><option value="300">5 minutos</option></select></div>
+            <canvas id="graficoVivo" class="grafico"></canvas>
+            <div class="legenda-grafico"><span><i class="ponto azul"></i>Processador <b id="legCpu"></b></span><span><i class="ponto verde"></i>Memória <b id="legRam"></b></span><span id="legGpuBox"><i class="ponto roxo"></i>Placa de vídeo <b id="legGpu"></b></span></div>
+          </div>
+          <div class="card">
+            <div class="linha-titulo"><h3><svg><use href="#i-alvo"/></svg>Ações recomendadas</h3></div>
+            <div id="acoes" class="acoes-lista"><p class="vazio">Aguardando a análise...</p></div>
+          </div>
+        </div>
+
+        <div id="analise" class="card largo">
+          <div class="linha-titulo"><h3><svg><use href="#i-busca"/></svg>Resultado da análise</h3><button id="btnReanalisar" class="pequeno">Analisar novamente</button></div>
+          <p class="dica">Nada é alterado pela análise. Cada item mostra o impacto esperado e o que muda se você aplicar — sempre depois de revisar.</p>
+          <div id="categorias" class="categorias"></div>
+        </div>
+
+        <p class="rodape"><svg><use href="#i-relogio"/></svg><span id="ultimaAnalise">Nenhuma análise realizada ainda.</span><span id="infoSistema"></span></p>
+      </section>
+
+      <!-- DESEMPENHO -->
+      <section id="desempenho" class="pagina">
+        <header class="cabecalho"><div><h1>Desempenho</h1><p class="sub">Uso real de processador, memória e placa de vídeo, e os programas que mais consomem agora.</p></div>
+          <button id="btnRamMonitor">Liberar RAM</button></header>
+        <div class="metricas tres">
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-cpu"/></svg>Processador</div><strong id="cpuValor">—</strong><span class="dica" id="cpuNome"></span></div>
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-ram"/></svg>Memória</div><strong id="ramValor">—</strong><span class="dica" id="ramDetalhe"></span></div>
+          <div class="card metrica"><div class="metrica-topo"><svg><use href="#i-gpu"/></svg>Placa de vídeo</div><strong id="gpuValor">—</strong><span class="dica" id="gpuDetalhe"></span></div>
+        </div>
+        <div class="card largo"><canvas id="graficoDesempenho" class="grafico alto"></canvas>
+          <div class="legenda-grafico"><span><i class="ponto azul"></i>Processador</span><span><i class="ponto verde"></i>Memória</span><span><i class="ponto roxo"></i>Placa de vídeo</span></div></div>
+        <div class="card largo">
+          <div class="linha-titulo"><h3>Processos</h3>
+            <div class="acoes"><input id="buscaProc" placeholder="Pesquisar processo..."><button id="btnFinalizar" class="perigo pequeno" disabled>Finalizar (0)</button></div></div>
+          <p class="dica">Nada é encerrado automaticamente. Processos do sistema ficam bloqueados. Clique nos títulos para ordenar.</p>
+          <div class="tabela"><table><thead><tr><th></th><th class="ordena" data-ord="nome">Programa</th><th class="ordena" data-ord="ramMB">Memória</th><th class="ordena" data-ord="cpu">CPU</th></tr></thead>
+            <tbody id="listaProc"><tr><td colspan="4" class="vazio">Carregando...</td></tr></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- LIMPEZA -->
+      <section id="limpeza" class="pagina">
+        <header class="cabecalho"><div><h1>Limpeza</h1><p class="sub">Revise o que foi encontrado, escolha o que remover e confirme antes de apagar.</p></div>
+          <div class="acoes"><button id="btnEscanear">Escanear de novo</button><button id="btnLimpar" class="primario">Limpar selecionados</button></div></header>
+        <div class="card total-limpeza"><small>Selecionado para limpar</small><strong id="totalLimpeza">—</strong>
+          <span class="dica">Só temporários e caches. Documentos, fotos, senhas e histórico não são tocados. Feche os navegadores antes para limpar o cache deles.</span></div>
+        <label class="check-ponto"><input type="checkbox" id="pontoLimpeza"> Criar ponto de restauração antes (precisa de Administrador)</label>
+        <div id="opcoesLimpeza" class="opcoes"></div>
+      </section>
+
+      <!-- INICIALIZAÇÃO -->
+      <section id="startup" class="pagina">
+        <header class="cabecalho"><div><h1>Inicialização</h1><p class="sub">Programas que abrem junto com o Windows. Desativar não apaga nada — o programa só para de abrir sozinho e dá para reativar a qualquer momento.</p></div>
+          <button id="btnAtualizarStartup">Atualizar lista</button></header>
+        <div id="listaStartup" class="lista"></div>
+      </section>
+
+      <!-- APLICATIVOS -->
+      <section id="apps" class="pagina">
+        <header class="cabecalho">
+          <div><h1>Aplicativos instalados</h1><p class="sub">Sugestões do que pode sair. Só é desinstalado o que você marcar e confirmar.</p></div>
+          <div class="acoes">
+            <input id="busca" placeholder="Buscar app...">
+            <select id="filtro"><option value="sugeridos">Sugeridos para remover</option><option value="todos">Todos</option></select>
+            <button id="btnDesinstalar" class="perigo" disabled>Desinstalar (0)</button>
+          </div>
+        </header>
+        <p class="legenda"><b class="tag remover">Remover</b> pode tirar sem medo · <b class="tag revisar">Revisar</b> veja se ainda usa · <b class="tag sistema">Sistema</b> não mexer</p>
+        <label class="check-ponto"><input type="checkbox" id="pontoApps"> Criar ponto de restauração antes de desinstalar (precisa de Administrador)</label>
+        <div class="tabela"><table><thead><tr><th></th><th>Nome</th><th>Fabricante</th><th>Tamanho</th><th>Por quê</th></tr></thead><tbody id="listaApps"></tbody></table></div>
+      </section>
+
+      <!-- FERRAMENTAS -->
+      <section id="ferramentas" class="pagina">
+        <header class="cabecalho"><div><h1>Ferramentas</h1><p class="sub">Ações manuais. Todas pedem confirmação e explicam o que muda antes de aplicar.</p></div></header>
+
+        <div id="jogoStatus" class="card largo jogo-status">
+          <div class="linha-titulo"><h3><svg><use href="#i-jogo"/></svg>Modo Jogo — <span id="jogoTexto">Desativado</span></h3><button id="btnJogo" class="primario">Ativar Modo Jogo</button></div>
+          <p id="jogoDetalhe" class="dica">Troca o plano de energia para desempenho máximo, fecha os programas que você marcar e libera RAM. Ao desativar, volta o plano de energia que você usava (programas fechados não reabrem sozinhos).</p>
+          <div class="opcoes compactas">
+            <label><input type="checkbox" id="jogoPlanoMax" checked><span><b>Plano "Desempenho máximo"</b>Desmarque para usar "Alto desempenho".</span></label>
+            <label><input type="checkbox" id="jogoRam" checked><span><b>Liberar memória RAM</b>Esvazia a RAM parada antes do jogo.</span></label>
+          </div>
+          <div class="linha-titulo"><small>Fechar estes programas ao ativar</small><button id="btnAtualizarJogo" class="pequeno">Atualizar lista</button></div>
+          <div id="jogoProcessos" class="chips"></div>
+        </div>
+
+        <div class="ferramentas">
+          <div class="card"><h3><svg><use href="#i-ram"/></svg>Liberar memória RAM</h3><p>Devolve ao Windows a memória que os programas reservaram e não estão usando. Nenhum programa é fechado.</p><button id="btnRam">Liberar agora</button></div>
+          <div class="card"><h3><svg><use href="#i-voltar"/></svg>Ponto de restauração</h3><p>Uma "foto" das configurações do Windows para voltar caso algo dê errado. Precisa de Administrador.</p><button id="btnCriarPonto" class="primario">Criar agora</button></div>
+          <div class="card"><h3><svg><use href="#i-relogio"/></svg>Restauração do Sistema</h3><p>Abre a ferramenta do Windows para escolher um ponto e voltar no tempo.</p><button id="btnAbrirRestauracao">Abrir</button></div>
+          <div class="card"><h3><svg><use href="#i-chave"/></svg>Permissões</h3><p id="txtAdmin">Verificando...</p><button id="btnAdmin">Reiniciar como administrador</button></div>
+          <div class="card"><h3><svg><use href="#i-escudo"/></svg>Proteção do Windows</h3><p id="txtDefender">Verificando...</p><button id="btnDefender">Abrir Segurança do Windows</button></div>
+        </div>
+      </section>
+
+      <!-- RELATÓRIOS -->
+      <section id="relatorios" class="pagina">
+        <header class="cabecalho"><div><h1>Relatórios</h1><p class="sub">Última análise e tudo o que o aplicativo fez neste PC.</p></div></header>
+        <div class="card largo" id="relAnalise"><h3>Última análise</h3><p class="dica">Nenhuma análise realizada ainda.</p></div>
+        <div class="card largo">
+          <h3>Histórico de ações</h3>
+          <p class="dica">"Desfazer" só aparece quando existe reversão real: itens de inicialização e Modo Jogo. Limpeza e desinstalação não podem ser desfeitas pelo app (use um ponto de restauração).</p>
+          <div class="tabela"><table><thead><tr><th>Data</th><th>Ação</th><th>Resultado</th><th></th></tr></thead><tbody id="historico"></tbody></table></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="carregando" class="escondido"><div class="spinner"></div><p id="msgCarregando">Analisando...</p></div>
+  <div id="toast"><span id="toastMsg"></span><button id="toastAcao" class="pequeno escondido"></button></div>
+  <script src="renderer.js"></script>
+</body>
+</html>

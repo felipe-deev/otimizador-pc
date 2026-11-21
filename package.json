@@ -1,0 +1,40 @@
+{
+  "name": "otimizador-pc",
+  "productName": "Otimizador PC",
+  "version": "1.0.0",
+  "description": "Otimizador para Windows: remove apps desnecessários, controla a inicialização e limpa arquivos inúteis.",
+  "main": "src/main.js",
+  "author": "Felipe Borges de Lima",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.felipedeev.otimizadorpc",
+    "productName": "Otimizador PC",
+    "directories": {
+      "output": "programa"
+    },
+    "asar": false,
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
+
+
