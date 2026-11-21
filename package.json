@@ -5,7 +5,8 @@
   "description": "Otimizador para Windows: remove apps desnecessários, controla a inicialização e limpa arquivos inúteis.",
   "main": "src/main.js",
   "author": "Felipe Borges de Lima",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win"
@@ -17,6 +18,7 @@
   "build": {
     "appId": "com.felipedeev.otimizadorpc",
     "productName": "Otimizador PC",
+    "copyright": "Copyright © 2026 Felipe Borges de Lima. Todos os direitos reservados.",
     "directories": {
       "output": "programa"
     },
@@ -24,7 +26,8 @@
     "files": [
       "src/**/*",
       "build/icon.png",
-      "package.json"
+      "package.json",
+      "LICENSE"
     ],
     "win": {
       "target": "nsis",

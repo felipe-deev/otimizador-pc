@@ -51,16 +51,32 @@ $chaves = 'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',
           'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',
           'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
 $lista = @()
+# Pasta do app: InstallLocation do registro; se vazio, a pasta do ícone ou do desinstalador (quando não é msiexec)
+function PastaDe($p) {
+  if ($p -and (Test-Path -LiteralPath $p -PathType Container)) { return (Get-Item -LiteralPath $p).FullName.TrimEnd('\\') }
+  return $null
+}
+function PastaDoArquivo($cmd) {
+  if (-not $cmd -or $cmd -match 'msiexec') { return $null }
+  $c = [Environment]::ExpandEnvironmentVariables("$cmd")
+  $m = [regex]::Match($c, '^\\s*"([^"]+)"'); $arq = if ($m.Success) { $m.Groups[1].Value } else { [regex]::Match($c, '^\\s*(.+?\\.(exe|ico|dll))', 'IgnoreCase').Groups[1].Value }
+  $arq = $arq -replace ',\\s*-?\\d+$', ''
+  if ($arq -and (Test-Path -LiteralPath $arq -PathType Leaf)) { return PastaDe (Split-Path -LiteralPath $arq -Parent) }
+  return $null
+}
 Get-ItemProperty $chaves | Where-Object { $_.DisplayName -and -not $_.SystemComponent -and -not $_.ParentKeyName -and ($_.UninstallString -or $_.QuietUninstallString) } | ForEach-Object {
   $data = $null; if ($_.InstallDate -match '^\\d{8}$') { $data = "$($_.InstallDate.Substring(6,2))/$($_.InstallDate.Substring(4,2))/$($_.InstallDate.Substring(0,4))" }
+  $local = PastaDe $_.InstallLocation
+  if (-not $local) { $local = PastaDoArquivo $_.DisplayIcon }
+  if (-not $local) { $local = PastaDoArquivo $_.UninstallString }
   $lista += [pscustomobject]@{ tipo='programa'; nome=$_.DisplayName.Trim(); versao=$_.DisplayVersion; fabricante=$_.Publisher
     tamanhoMB = if ($_.EstimatedSize) { [math]::Round($_.EstimatedSize/1024,0) } else { 0 }
-    instalado=$data; ano = if ($data) { [int]$_.InstallDate.Substring(0,4) } else { 0 }
+    instalado=$data; ano = if ($data) { [int]$_.InstallDate.Substring(0,4) } else { 0 }; local=$local
     desinstalar = if ($_.QuietUninstallString) { $_.QuietUninstallString } else { $_.UninstallString } }
 }
 Get-AppxPackage | Where-Object { -not $_.IsFramework -and $_.SignatureKind -ne 'System' -and -not $_.NonRemovable } | ForEach-Object {
   $lista += [pscustomobject]@{ tipo='store'; nome=$_.Name; versao="$($_.Version)"; fabricante=($_.Publisher -replace '^CN=([^,]+).*','$1')
-    tamanhoMB=0; instalado=$null; ano=0; desinstalar=$_.PackageFullName }
+    tamanhoMB=0; instalado=$null; ano=0; local=(PastaDe $_.InstallLocation); desinstalar=$_.PackageFullName }
 }
 $lista = $lista | Sort-Object nome -Unique
 $base = { param($n) (($n -replace '[\\d\\.\\(\\)x\\-]+','') -replace '\\s+',' ').Trim() }
@@ -83,6 +99,15 @@ $lista | ForEach-Object {
 const desinstalar = (app) => `
 $a = ${psParam(app)}
 try {
+  # Jogos de launcher (Steam, Epic, Ubisoft, EA, Battle.net, Riot): o "desinstalador" só abre o launcher, que fica aberto.
+  # Esperar por ele travaria para sempre — entrega o pedido e avisa que a confirmação é na janela do launcher.
+  $launcher = [regex]::Match($a.desinstalar, '(steam|com\\.epicgames\\.launcher|uplay|origin2?|battlenet)://\\S+')
+  if ($a.tipo -ne 'store' -and ($launcher.Success -or $a.desinstalar -match 'RiotClientServices|EpicGamesLauncher|Battle\\.net|EADesktop|upc\\.exe')) {
+    if ($launcher.Success) { Start-Process $launcher.Value.Trim('"') } else { Start-Process cmd.exe -ArgumentList "/c \`"$($a.desinstalar)\`"" -WindowStyle Hidden }
+    $nome = if ($a.desinstalar -match 'steam') { 'Steam' } elseif ($a.desinstalar -match 'epic') { 'Epic Games' } elseif ($a.desinstalar -match 'Riot') { 'Riot Client' } elseif ($a.desinstalar -match 'uplay|upc') { 'Ubisoft Connect' } elseif ($a.desinstalar -match 'battle') { 'Battle.net' } else { 'EA app' }
+    @{ ok=$true; pendente=$true; launcher=$nome } | ConvertTo-Json -Compress
+    return
+  }
   if ($a.tipo -eq 'store') { Remove-AppxPackage -Package $a.desinstalar -ErrorAction Stop }
   elseif ($a.desinstalar -match 'msiexec') {
     $guid = [regex]::Match($a.desinstalar, '\\{[0-9A-Fa-f\\-]+\\}').Value

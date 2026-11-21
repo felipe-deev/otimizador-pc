@@ -146,6 +146,18 @@ ipcMain.handle('apps:listar', seguro(async () => {
   return appsCache.map(({ desinstalar, ...resto }) => resto);
 }, 'apps:listar'));
 
+// Abre no Explorador a pasta onde o app está instalado (só leitura; nada é alterado)
+ipcMain.handle('apps:abrirLocal', seguro(async (_e, id) => {
+  const a = appsCache[id];
+  if (!a) return { ok: false, erro: 'App não encontrado. Atualize a lista.' };
+  if (!a.local) return { ok: false, erro: `O Windows não informa a pasta de instalação de "${a.nome}".` };
+  if (!fs.existsSync(a.local)) return { ok: false, erro: `A pasta registrada não existe mais: ${a.local}` };
+  const falha = await shell.openPath(a.local);
+  // Pastas protegidas (ex.: WindowsApps da Microsoft Store) não abrem direto: mostra a pasta selecionada na pasta de cima
+  if (falha) shell.showItemInFolder(a.local);
+  return { ok: true };
+}, 'apps:abrirLocal'));
+
 ipcMain.handle('apps:desinstalar', seguro(async (_e, ids, criarPonto) => {
   const alvos = ids.map((id) => appsCache[id]).filter(Boolean).filter((a) => a.nivel !== 'sistema');
   if (!alvos.length) return { ok: false, erro: 'Nada selecionado.' };
@@ -162,7 +174,8 @@ ipcMain.handle('apps:desinstalar', seguro(async (_e, ids, criarPonto) => {
     win.webContents.send('progresso', `Desinstalando ${a.nome} (${i + 1}/${alvos.length})...`);
     const r = await runPS(S.desinstalar(a), 15 * 60 * 1000);
     resultados.push({ nome: a.nome, ...(r || { ok: false }) });
-    historico('Desinstalado: ' + a.nome, { resultado: r?.ok ? 'ok' : 'falha' });
+    if (r?.pendente) historico(`Desinstalação enviada ao ${r.launcher}: ${a.nome} (confirmar no ${r.launcher})`, { resultado: 'pendente' });
+    else historico('Desinstalado: ' + a.nome, { resultado: r?.ok ? 'ok' : 'falha' });
   }
   return { ok: true, resultados, ponto: ponto?.ok };
 }, 'apps:desinstalar'));

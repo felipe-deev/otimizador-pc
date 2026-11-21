@@ -1,0 +1,42 @@
+VOLT PC Otimizador
+Copyright (c) 2026 Felipe Borges de Lima. Todos os direitos reservados.
+
+Este software, incluindo o código-fonte, a interface, o ícone, os textos e a
+documentação (o "Software"), é de propriedade exclusiva do autor.
+
+O código está publicado neste repositório apenas para consulta. Nenhuma
+licença é concedida, de forma expressa ou implícita, além do direito de
+visualizar o repositório na plataforma onde ele está hospedado, conforme os
+termos de uso dessa plataforma.
+
+Sem autorização prévia e por escrito do autor, NÃO é permitido:
+
+  1. copiar, reproduzir ou redistribuir o Software, no todo ou em parte;
+  2. modificar, adaptar, traduzir ou criar obras derivadas do Software;
+  3. usar o Software, ou partes dele, em outros projetos, pessoais ou
+     comerciais;
+  4. vender, alugar, sublicenciar ou disponibilizar o Software a terceiros;
+  5. remover ou alterar avisos de autoria e de direitos autorais.
+
+Pedidos de autorização devem ser feitos ao autor pelo perfil do GitHub
+(https://github.com/felipe-deev).
+
+O SOFTWARE É FORNECIDO "NO ESTADO EM QUE SE ENCONTRA", SEM GARANTIAS DE
+QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS, INCLUINDO, SEM LIMITAÇÃO, GARANTIAS DE
+COMERCIALIZAÇÃO, ADEQUAÇÃO A UM DETERMINADO FIM E NÃO VIOLAÇÃO. EM NENHUMA
+HIPÓTESE O AUTOR SERÁ RESPONSÁVEL POR QUALQUER RECLAMAÇÃO, DANO, PERDA DE
+DADOS OU OUTRA RESPONSABILIDADE DECORRENTE DO USO DO SOFTWARE.
+
+Protegido pela Lei nº 9.610/1998 (Lei de Direitos Autorais) e pela
+Lei nº 9.609/1998 (Lei do Software).
+
+------------------------------------------------------------------------------
+
+English summary: Copyright (c) 2026 Felipe Borges de Lima. All rights
+reserved. The source code is published for viewing only. No permission is
+granted to copy, modify, distribute, sublicense, or use this software, in
+whole or in part, without prior written permission from the author. The
+software is provided "as is", without warranty of any kind.
+
+Componentes de terceiros (Electron, Chromium e demais dependências) continuam
+sob as licenças de seus próprios autores.

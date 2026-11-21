@@ -234,12 +234,16 @@ function renderApps() {
   $('#listaApps').innerHTML = lista.length ? lista.map((a) => `
     <tr>
       <td><input type="checkbox" data-id="${a.id}" ${selApps.has(a.id) ? 'checked' : ''} ${a.nivel === 'sistema' ? 'disabled' : ''}></td>
-      <td class="nome"><b>${esc(a.nome)}</b><span>${a.tipo === 'store' ? 'Microsoft Store' : 'Programa'}${a.versao ? ' · v' + esc(a.versao) : ''}${a.instalado ? ' · ' + esc(a.instalado) : ''}</span></td>
+      <td class="nome"><b>${esc(a.nome)}</b><span>${a.tipo === 'store' ? 'Microsoft Store' : 'Programa'}${a.versao ? ' · v' + esc(a.versao) : ''}${a.instalado ? ' · ' + esc(a.instalado) : ''}</span>
+        <div class="local">${a.local
+          ? `<button class="pequeno link" data-local="${a.id}" title="Abrir esta pasta no Explorador">${icone('pasta')}Abrir local</button><span class="caminho" title="${esc(a.local)}">${esc(a.local)}</span>`
+          : '<span class="caminho">Pasta não informada pelo Windows</span>'}</div></td>
       <td>${esc(a.fabricante)}</td>
       <td>${a.tamanhoMB ? mb(a.tamanhoMB) : '—'}</td>
       <td class="motivo">${a.nivel !== 'ok' ? `<b class="tag ${a.nivel}">${{ remover: 'Remover', revisar: 'Revisar', sistema: 'Sistema' }[a.nivel]}</b>` : ''}${esc(a.motivos)}</td>
     </tr>`).join('') : '<tr><td colspan="5" class="vazio">Nada por aqui. Nenhum app sugerido para remover neste filtro.</td></tr>';
   $$('#listaApps input').forEach((c) => (c.onchange = () => { const id = +c.dataset.id; c.checked ? selApps.add(id) : selApps.delete(id); botaoDesinstalar(); }));
+  $$('[data-local]').forEach((b) => (b.onclick = async () => { const r = await api.abrirLocalApp(+b.dataset.local); if (!r?.ok) toast(r?.erro || 'Não foi possível abrir a pasta.', true); }));
   botaoDesinstalar();
 }
 function botaoDesinstalar() { $('#btnDesinstalar').disabled = !selApps.size; $('#btnDesinstalar').textContent = `Desinstalar (${selApps.size})`; }
@@ -251,8 +255,11 @@ $('#btnDesinstalar').onclick = async () => {
   carregando(false);
   if (r?.cancelado) return;
   if (!r?.ok) return toast(r?.erro || 'Erro ao desinstalar', true);
-  const falhas = r.resultados.filter((x) => !x.ok);
-  toast(`${r.resultados.length - falhas.length} removido(s).` + (r.ponto ? ' Ponto de restauração criado.' : '') + (falhas.length ? `\nFalharam: ${falhas.map((f) => f.nome).join(', ')}` : ''), falhas.length > 0);
+  const falhas = r.resultados.filter((x) => !x.ok), pend = r.resultados.filter((x) => x.ok && x.pendente);
+  const feitos = r.resultados.length - falhas.length - pend.length;
+  toast((feitos ? `${pl(feitos, 'app removido', 'apps removidos')}.` : '') + (r.ponto ? ' Ponto de restauração criado.' : '') +
+    (pend.length ? `\nConfirme na janela do launcher: ${pend.map((p) => `${p.nome} (${p.launcher})`).join(', ')}. Depois clique em Atualizar a lista.` : '') +
+    (falhas.length ? `\nFalharam: ${falhas.map((f) => f.nome).join(', ')}` : ''), falhas.length > 0);
   carregando(true, 'Atualizando lista...'); await carregarApps(); carregando(false); montarAnalise(false);
 };
 
@@ -494,7 +501,7 @@ async function carregarRelatorios() {
        <div class="rel-grade">${(a.categorias || []).map((c) => `<div><small>${esc(c.titulo)}</small><b class="tag ${c.nivel === 'ok' ? 'ok' : c.nivel === 'ruim' ? 'falha' : 'parcial'}">${IMPACTO[c.impacto] || ''}</b><p class="dica">${esc(c.achado)}</p></div>`).join('')}</div>`
     : '<h3>Última análise</h3><p class="dica">Nenhuma análise realizada ainda.</p>';
   const h = await api.historico();
-  const rotulo = { ok: 'Concluído', falha: 'Falhou', parcial: 'Parcial' };
+  const rotulo = { ok: 'Concluído', falha: 'Falhou', parcial: 'Parcial', pendente: 'Aguardando launcher' };
   $('#historico').innerHTML = h.length ? h.map((x) => `<tr>
       <td><time>${dataHora(x.data)}</time></td><td>${esc(x.msg)}</td>
       <td>${x.desfeito ? '<b class="tag desfeito">Desfeito</b>' : `<b class="tag ${x.resultado}">${rotulo[x.resultado] || 'Concluído'}</b>`}</td>

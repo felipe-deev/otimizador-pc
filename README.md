@@ -23,7 +23,7 @@ Feito com **Electron + Node.js + PowerShell**, sem nenhuma biblioteca de interfa
 | **Desempenho** | Gráfico de CPU, memória e GPU e lista dos processos que mais consomem, com busca e ordenação. "Finalizar" pede confirmação e explica o efeito. Processos do sistema ficam bloqueados. |
 | **Limpeza** | Mostra o tamanho de cada categoria antes de apagar: temporários, Lixeira, cache de navegadores (Chrome, Edge, Brave, Opera, Firefox), cache de apps (Discord, Teams, VS Code, Steam, Epic), miniaturas, relatórios de erro, logs, Windows Update, Otimização de Entrega, shaders, cache de programação (npm, pip, yarn, NuGet), recentes e DNS. Documentos, fotos, senhas e histórico dos navegadores nunca são tocados. |
 | **Inicialização** | Programas que abrem com o Windows, com nome, editor e estado. Ligar ou desligar é reversível na hora (botão "Desfazer"). Itens essenciais do Windows ficam bloqueados. |
-| **Aplicativos** | Classifica o que está instalado. 🔴 **Remover**: propaganda, trials e "otimizadores" duvidosos. 🟡 **Revisar**: versões duplicadas, apps enormes ou antigos. 🔵 **Sistema**: drivers e runtimes, bloqueados. |
+| **Aplicativos** | Classifica o que está instalado. 🔴 **Remover**: propaganda, trials e "otimizadores" duvidosos. 🟡 **Revisar**: versões duplicadas, apps enormes ou antigos. 🔵 **Sistema**: drivers e runtimes, bloqueados. O botão **Abrir local** mostra a pasta de cada app antes de você decidir. Jogos de launcher (Steam, Epic, Riot e outros) são enviados ao próprio launcher, onde você confirma. |
 | **Ferramentas** | Modo Jogo (plano de energia máximo, fecha os programas que você escolher e libera RAM; ao desativar volta o plano anterior), liberar RAM, ponto de restauração, Restauração do Sistema e atalho para a Segurança do Windows. |
 | **Relatórios** | Resultado da última análise e histórico de tudo que o app fez (data, ação e resultado), com "Desfazer" onde é possível. |
 
@@ -121,6 +121,20 @@ docs/            imagens deste README
 
 As listas de bloatware e de itens protegidos ficam no topo de `src/scripts.js` (`BLOATWARE`, `PROTEGIDOS`, `RUIM`). As categorias de limpeza ficam em `ALVOS_LIMPEZA`, no mesmo arquivo.
 
+## ⚠️ Aviso de uso
+
+- Este app **altera o Windows**: apaga arquivos temporários e caches, desinstala aplicativos, muda itens de inicialização e o plano de energia. Cada ação mostra antes o que vai mudar e pede confirmação, mas **o uso é por sua conta e risco**.
+- **Limpeza e desinstalação não podem ser desfeitas pelo app.** Antes de mudanças grandes, crie um ponto de restauração (Ferramentas → Ponto de restauração).
+- Revise as sugestões antes de aceitar. "Remover" é uma sugestão baseada em nome e fabricante, não uma garantia de que o app é inútil para você. Use **Abrir local** para ver a pasta do app antes de decidir.
+- Não há garantia de aumento de desempenho. O app só executa ações conhecidas e explicadas na tela.
+- O software é fornecido "no estado em que se encontra", sem garantias. Veja a [LICENSE](LICENSE).
+
+## Segurança
+
+Encontrou uma falha de segurança? **Não abra uma issue pública.** Veja como reportar em particular na [Política de segurança](SECURITY.md).
+
 ## Licença
 
-MIT.
+**Copyright © 2026 Felipe Borges de Lima. Todos os direitos reservados.**
+
+O código está publicado apenas para consulta. Copiar, modificar, redistribuir ou usar este software, no todo ou em parte, depende de autorização prévia e por escrito do autor. Detalhes em [LICENSE](LICENSE).

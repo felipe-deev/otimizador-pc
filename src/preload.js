@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('api', {
   finalizar: call('processos:finalizar'),
   listarApps: call('apps:listar'),
   desinstalar: call('apps:desinstalar'),
+  abrirLocalApp: call('apps:abrirLocal'),
   listarStartup: call('startup:listar'),
   alternarStartup: call('startup:alternar'),
   alvosLimpeza: call('limpeza:alvos'),
